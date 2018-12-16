@@ -1,0 +1,27 @@
+{% extends 'basic.html' %}
+{%block title%}聚焦数据控制台{%endblock%}
+{%block content%}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">jujiaodata.com   服务器控制台</h1>
+  </div>
+</div>
+<div class="pt-console">
+	<div class="pt-layout">
+		{{filelist|safe}}
+	</div>
+	<div class="pt-input">
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<span class="input-group-text" id="basic-addon1">@</span>
+			</div>
+			<input type="text" class="form-control" placeholder="filename" aria-label="Username" aria-describedby="basic-addon1" id="filename">
+		</div>
+		<button type="button" class="btn btn-warning" id="runserver" style="float:right">运行脚本</button>
+	</div>
+</div>
+<div id="footer">
+    Copyright2018 聚焦数据.All Rights Reserved
+</div>
+<script type="text/javascript" src="/static/js/main.js"></script>
+{%endblock%}

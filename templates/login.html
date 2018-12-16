@@ -1,0 +1,12 @@
+{% extends 'basic.html' %}
+{%block title%}Login{%endblock%}
+{%block content%}
+<div class="login-container" style="margin: 50px auto auto auto;width: 300px;height: 200px;text-align: center">
+	<h2>登陆<span class="badge badge-secondary">New</span></h2>
+	<form method = 'post' enctype="multipart/form-data">
+	{% csrf_token %}
+	{{userform.as_p}}
+	<button type="submit" class="btn btn-success" style="margin-right: 20px">login</button>
+	</form>
+</div>
+{%endblock%}
