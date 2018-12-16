@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^query/', ad.queryDb),
     url(r'^putty/', ad.putty),
     url(r'^handle/', ad.handleShell),
+    url(r'^search/', bk.fuzzySearch),
 ]
