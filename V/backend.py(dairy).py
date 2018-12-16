@@ -15,7 +15,7 @@ class UserForm(forms.Form):
 def index(request):
     diariesList = []
     lastId=request.GET.get('lastid',default='0')
-    once=request.GET.get('once',default='10')
+    once=request.GET.get('one',default='5')
     try:
         last = int(lastId)
         one = int(once)
@@ -24,6 +24,7 @@ def index(request):
             dic = {}
             dic['content_id'] = str(article.id)
             dic['cover'] = article.cover
+            #dic['cover'] = "http://m.chanyouji.cn/index-cover/64695-2679221.jpg?imageView2/1/w/620/h/330/format/jpg"
             dic['title'] = article.title
             dic['meta'] = article.createtime.strftime("%Y-%m-%d %H:%M:%S")
             diariesList.append(dic)
@@ -129,19 +130,3 @@ def updateReadTime(contentid, orm_obj):
     newReadTimes = oldReadTimes+1
     orm_obj.readtimes = newReadTimes
     orm_obj.save()
-
-def fuzzySearch(request):
-    diariesList = []
-    keyword=request.GET.get('keyword')
-    try:
-        articles = YsArticle.objects.filter(title__contains=keyword.strip())
-        for article in articles:
-            dic = {}
-            dic['content_id'] = str(article.id)
-            dic['cover'] = article.cover
-            dic['title'] = article.title
-            dic['meta'] = article.createtime.strftime("%Y-%m-%d %H:%M:%S")
-            diariesList.append(dic)
-    except Exception as e:
-        HttpResponse(e)
-    return HttpResponse(json.dumps(diariesList))
