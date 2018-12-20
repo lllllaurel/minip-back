@@ -19,7 +19,7 @@ def index(request):
     try:
         last = int(lastId)
         one = int(once)
-        articles = YsArticle.objects.all().order_by('-id')[last-one:last]
+        articles = YsArticle.objects.filter(reserve = '1').order_by('-id')[last-one:last]
         for article in articles:
             dic = {}
             dic['content_id'] = str(article.id)
