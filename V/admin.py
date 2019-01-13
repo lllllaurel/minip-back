@@ -47,16 +47,15 @@ def showChart(request):
     if not checkLoginStatus(request):
         return HttpResponseRedirect('/login/')
     dateDelta = 7
-    dateOfTday_p = datetime.datetime.now().date()
-    dateOfTday = dateOfTday_p - datetime.timedelta(days=20)
+    dateOfTday = datetime.datetime.now().date()
     dateOf7DaysAgo = dateOfTday - datetime.timedelta(weeks=1)
-    dataOf7Days = YsArticle.objects.filter(createtime__gte=dateOf7DaysAgo, createtime__lte=dateOfTday)
+    dataOf7Days = YsArticle.objects.filter(createtime__gte=dateOf7DaysAgo, createtime__lte=dateOfTday+datetime.timedelta(days=1))
     # dataOf7Days = YsArticle.objects.all()
     readtimelist = []
     deltalist = []
     for dta in range(dateDelta):
         #获取阅读量
-        startDate = dateOfTday-datetime.timedelta(dateDelta-dta)
+        startDate = dateOfTday-datetime.timedelta(dateDelta-dta-1)
         readtimes = dataOf7Days.filter(createtime__range=(startDate, startDate + datetime.timedelta(days=1))).aggregate(Sum('readtimes'))['readtimes__sum']
         delta = dataOf7Days.filter(createtime__range=(startDate, startDate + datetime.timedelta(days=1))).count()
         readtimelist.append(readtimes if readtimes is not None else 0)
