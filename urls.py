@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^putty/', ad.putty),
     url(r'^handle/', ad.handleShell),
     url(r'^search/', bk.fuzzySearch),
+    url(r'^showchart/', ad.showChart),
 ]

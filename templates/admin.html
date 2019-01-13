@@ -7,36 +7,151 @@
 {#    <p class="lead">This is a mod.</p>#}
   </div>
 </div>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Tables</th>
-      <th scope="col">总条目</th>
-      <th scope="col">今日新增</th>
-      <th scope="col">总阅读量</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">YsArticle</th>
-      <td>{{ show.ystotal }}</td>
-      <td>{{ show.ystoday }}</td>
-      <td>{{ show.totalreadtimes }}</td>
-    </tr>
-    <tr>
-      <th scope="row">Ips</th>
-      <td>{{ show.iptotal }}</td>
-      <td>-</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <th scope="row">Logs</th>
-      <td>{{ show.logtotal }}</td>
-      <td>{{ show.logtoday }}</td>
-      <td>-</td>
-    </tr>
-  </tbody>
-</table>
+<div class="holder" style="width: 1300px;height: 500px;">
+  <div id="chart-display" style="width: 600px;height:400px;float: left"></div>
+  <div style="width: 600px;height: 400px;float: left; margin: 60px auto auto 20px">
+    <table class="table" style="">
+      <thead>
+        <tr>
+          <th scope="col">Tables</th>
+          <th scope="col">总条目</th>
+          <th scope="col">今日新增</th>
+          <th scope="col">总阅读量</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">YsArticle</th>
+          <td>{{ show.ystotal }}</td>
+          <td>{{ show.ystoday }}</td>
+          <td>{{ show.totalreadtimes }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Ips</th>
+          <td>{{ show.iptotal }}</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th scope="row">Logs</th>
+          <td>{{ show.logtotal }}</td>
+          <td>{{ show.logtoday }}</td>
+          <td>-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+  $.ajaxSetup({  
+    async : false
+  });
+  $.getJSON('/showchart/',{},function(data){
+    readtime = data['readtime'];
+    delta = data['delta'];
+  })
+  var thisDate = new Date();
+  var dateList = []
+  for (var i = 6; i >= 0; i--) {
+    thatDate = 24*60*60*1000*i;
+    dt = new Date(thisDate.getTime()-thatDate)
+    dateList.push(dt.getMonth()+1+'月'+dt.getDate()+'日');
+  }
+  // 基于准备好的dom，初始化echarts实例
+  var myChart = echarts.init(document.getElementById('chart-display'));
+  // 指定图表的配置项和数据
+  var option = {
+    title : {
+      text: '近一周阅读量变化趋势',
+      subtext: '含开发点击数'
+    },
+    tooltip : {
+      trigger: 'axis'
+    },
+    legend: {
+      data:['文章点击数','文章增量']
+    },
+    toolbox: {
+      show : true,
+      feature : {
+        mark : {show: true},
+        dataView : {show: true, readOnly: false},
+        magicType : {show: true, type: ['line', 'bar']},
+        restore : {show: true},
+        saveAsImage : {show: true}
+      }
+    },
+    calculable : true,
+    xAxis : [
+      {
+        type : 'category',
+        boundaryGap : false,
+        data : dateList
+      }
+    ],
+    yAxis : [
+      {
+        type : 'value',
+        axisLabel : {
+          formatter: '{value}'
+        }
+      }
+    ],
+    series : [
+      {
+        name:'文章点击数',
+        type:'line',
+        data:readtime,
+        markPoint : {
+          data : [
+            {type : 'max', name: '最大值'},
+            {type : 'min', name: '最小值'}
+          ]
+        },
+        markLine : {
+          data : [
+            {type : 'average', name: '平均值'}
+          ],
+        },
+        lineStyle : {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+              offset: 0, color: 'red' // 0% 处的颜色
+            }, {
+              offset: 1, color: 'blue' // 100% 处的颜色
+            }],
+            globalCoord: false // 缺省为 false
+          }
+        } 
+      },
+      {
+        name:'文章增量',
+        type:'line',
+        data:delta,
+        markPoint : {
+          data : [
+            {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+          ]
+        },
+        markLine : {
+          data : [
+            {type : 'average', name : '平均值'}
+          ]
+        },
+        lineStyle : {
+          color: '#32cd99'
+        } 
+      }
+    ]
+  };
+  // 使用刚指定的配置项和数据显示图表。
+  myChart.setOption(option);
+</script>
 <div id="footer">
     Copyright2018 聚焦数据.All Rights Reserved
 </div>
