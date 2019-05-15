@@ -18,6 +18,7 @@ from django.contrib import admin
 import syapp.views as sy
 import V.backend as bk
 import V.admin as ad
+import V.tool as tl
 
 urlpatterns = [
     url(r'^$', ad.admin),
@@ -33,4 +34,6 @@ urlpatterns = [
     url(r'^handle/', ad.handleShell),
     url(r'^search/', bk.fuzzySearch),
     url(r'^showchart/', ad.showChart),
+    url(r'^tools/', tl.geoDistanceLayout),
+    url(r'^caldistance/', tl.geoDistance)
 ]

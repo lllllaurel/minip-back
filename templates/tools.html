@@ -1,0 +1,58 @@
+{% extends 'basic.html' %}
+{%block title%}Tools-Geodistance{%endblock%}
+{%block content%}
+<div style="width: 800px;height: auto;margin-right: auto;margin-left: auto">
+	<div class="jumbotron jumbotron-fluid">
+	  <div class="container">
+	    <h1 class="display-4">经纬度查询两点间距离</h1>
+	  </div>
+	</div>
+	<div class="input-group mb-3">
+	  <input type="text" class="form-control" placeholder="raw source geo hash" aria-label="Recipient's username" aria-describedby="button-addon2" id="rawstr1">
+	  <div class="input-group-append">
+	    <button class="btn btn-outline-secondary" type="button" id="format1">Format</button>
+	  </div>
+	</div>
+
+	<div class="input-group mb-3">
+	  <input type="text" class="form-control" placeholder="raw target geo hash" aria-label="Recipient's username" aria-describedby="button-addon2" id="rawstr2">
+	  <div class="input-group-append">
+	    <button class="btn btn-outline-secondary" type="button" id="format2">Format</button>
+	  </div>
+	</div>
+
+	<button id="submit" type="button" class="btn btn-success">Calculate</button>
+	<div class="card" style="width: 300px; height: 100px; float: right">
+	  <div class="card-body">
+	    <h5 class="card-title" id="result"></h5>
+	  </div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#format1").click(function(){
+			var rawtext = $("#rawstr1").val();
+			var pattern=/([0-9]{2,3}\.[0-9]{1,})/g;
+			var matches=rawtext.match(pattern);
+			$("#rawstr1").val(matches);
+		});
+		$("#format2").click(function(){
+			var rawtext = $("#rawstr2").val();
+			var pattern=/([0-9]{2,3}\.[0-9]{1,})/g;
+			var matches=rawtext.match(pattern);
+			$("#rawstr2").val(matches);
+		});
+		$("#submit").click(function(){
+			if ($("#rawstr1").val() == ""||$("#rawstr2").val() == "") {
+				alert("参数不能为空!");
+				return false;
+			}
+			var geohash1 = $("#rawstr1").val();
+			var geohash2 = $("#rawstr2").val();
+			$.get('/caldistance/',{geohash1: geohash1, geohash2: geohash2},function(data){
+	            $("#result").text(data);
+	        });
+		})
+	})
+</script>
+{%endblock%}
