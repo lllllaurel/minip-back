@@ -13,6 +13,7 @@
       <th scope="col">Tables</th>
       <th scope="col">总条目</th>
       <th scope="col">今日新增</th>
+      <th scope="col">总阅读量</th>
     </tr>
   </thead>
   <tbody>
@@ -20,16 +21,19 @@
       <th scope="row">YsArticle</th>
       <td>{{ show.ystotal }}</td>
       <td>{{ show.ystoday }}</td>
+      <td>{{ show.totalreadtimes }}</td>
     </tr>
     <tr>
       <th scope="row">Ips</th>
       <td>{{ show.iptotal }}</td>
+      <td>-</td>
       <td>-</td>
     </tr>
     <tr>
       <th scope="row">Logs</th>
       <td>{{ show.logtotal }}</td>
       <td>{{ show.logtoday }}</td>
+      <td>-</td>
     </tr>
   </tbody>
 </table>

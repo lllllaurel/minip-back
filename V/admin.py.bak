@@ -14,13 +14,10 @@ from syapp.models import YsArticle, Ips, Logs
 from django import forms
 from syapp.models import UserMain
 from django.db.models import Sum
-import time,hashlib,os,datetime
+import time,hashlib,os
 import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-def applications(request):
-    return render(request, 'application.html', {})
 
 def admin(request):
     if not checkLoginStatus(request):
@@ -45,30 +42,6 @@ def admin(request):
     show['logtoday'] = logTday
     show['totalreadtimes'] = YsArticle.objects.all().aggregate(Sum('readtimes'))['readtimes__sum']
     return render(request, 'admin.html', {'show': show})
-
-def showChart(request):
-    if not checkLoginStatus(request):
-        return HttpResponseRedirect('/login/')
-    dateDelta = 7
-    dateOfTday = datetime.datetime.now().date()
-    dateOf7DaysAgo = dateOfTday - datetime.timedelta(weeks=1)
-    dataOf7Days = YsArticle.objects.filter(createtime__gte=dateOf7DaysAgo, createtime__lte=dateOfTday+datetime.timedelta(days=1))
-    # dataOf7Days = YsArticle.objects.all()
-    readtimelist = []
-    deltalist = []
-    for dta in range(dateDelta):
-        #获取阅读量
-        startDate = dateOfTday-datetime.timedelta(dateDelta-dta-1)
-        readtimes = dataOf7Days.filter(createtime__range=(startDate, startDate + datetime.timedelta(days=1))).aggregate(Sum('readtimes'))['readtimes__sum']
-        delta = dataOf7Days.filter(createtime__range=(startDate, startDate + datetime.timedelta(days=1))).count()
-        readtimelist.append(readtimes if readtimes is not None else 0)
-        deltalist.append(delta if delta is not None else 0)
-
-    show = {}
-    show['readtime'] = readtimelist
-    show['delta'] = deltalist
-
-    return JsonResponse(show)
 
 def showModel(request):
     if not checkLoginStatus(request):
